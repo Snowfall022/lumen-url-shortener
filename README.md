@@ -1,4 +1,6 @@
 `sudo docker-compose up --build -d`
+
+запустить миграции базы:
 `sudo docker exec -it php-url-shortener php /var/www/app/artisan migrate`
 
 ### /make_short_url
@@ -18,3 +20,6 @@
 
 ### /q/{encoded_url}
 редирект на полный урл
+
+
+почти всё тут: https://github.com/Snowfall022/lumen-url-shortener/blob/master/www/app/routes/web.php
