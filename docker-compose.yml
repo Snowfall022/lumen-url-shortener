@@ -1,0 +1,45 @@
+nginx:
+  build: images/nginx
+  command: nginx -g "daemon off;"
+  links:
+    - php
+  ports:
+    - "80:80"
+php:
+  container_name: php-url-shortener
+  build: images/php
+  volumes:
+    - ./www:/var/www/
+  working_dir: /var/www/app/public
+  command: php-fpm
+  environment:
+    APP_ENV: local
+    APP_DEBUG: 'true'
+    APP_LOCALE: en
+    APP_FALLBACK_LOCALE: en
+    DB_CONNECTION: pgsql
+    DB_PASSWORD: postgres
+    DB_USERNAME: postgres
+    DB_DATABASE: postgres
+    DB_HOST: db
+    DB_PORT: 5432
+    CACHE_DRIVER: redis
+    REDIS_CLIENT: predis
+    REDIS_HOST: cache
+  links:
+    - db
+    - cache
+db:
+  restart: always
+  image: postgres:10.2-alpine
+  ports:
+    - 5432:5432
+  environment:
+    POSTGRES_PASSWORD: postgres
+    POSGRES_USER: postgres
+    POSTGRES_DB: postgres
+cache:
+  restart: always
+  image: redis:5.0.7
+  ports:
+    - 6379:6379
